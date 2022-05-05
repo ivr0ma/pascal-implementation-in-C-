@@ -82,6 +82,7 @@ void Parser::analyze () {
 }
 
 void Parser::P () {
+    int lab_beg;
     //cout << "_P_" << endl;
     if ( c_type == LEX_PROGRAM ) {
         gl ();
@@ -89,7 +90,7 @@ void Parser::P () {
     else
         throw curr_lex;
 
-    beg_proc = poliz.size();
+    st_proc.push(poliz.size());
     poliz.push_back ( Lex ( ) );
     poliz.push_back ( Lex ( POLIZ_GO ) );
 
@@ -99,7 +100,10 @@ void Parser::P () {
     else
         throw curr_lex;
 
-    poliz[beg_proc] = Lex(POLIZ_LABEL, poliz.size());
+    while ( !st_proc.empty () ) {   //вытаскиваем из стека адреса ячеек процедур, которые заполняем адресом сновной части программы
+        from_st(st_proc, lab_beg);
+        poliz[lab_beg] = Lex(POLIZ_LABEL, poliz.size());
+    }
 
     B ();
 }
@@ -153,7 +157,7 @@ void Parser::OP () {
             throw curr_lex;
         gl ();
         B();
-        //st_proc.push(poliz.size());
+        st_proc.push(poliz.size());
         //cout<<"size="<<poliz.size()<<endl;
         poliz.push_back ( Lex ( ) );
         poliz.push_back ( Lex ( POLIZ_GO ) );

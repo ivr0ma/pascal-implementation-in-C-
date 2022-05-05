@@ -36,8 +36,6 @@ class Parser {
     stack < type_of_lex >   st_lex;
     void  P();
     void  D1();
-    void  OD();
-    void  OP();
     void  D();
     void  B();
     void  S();
@@ -96,51 +94,12 @@ void Parser::P () {
 void Parser::D1 () {
     //cout << "_D1_" << endl;
     if ( c_type == LEX_VAR ) {
-        OD();
-    }
-    else if ( c_type == LEX_PROCEDURE ) {
-        OP();
-    }
-    else if ( c_type == LEX_SEMICOLON ) ;
-    else
-        throw curr_lex;
-}
-
-void Parser::OD () {
-    //cout << "_D1_" << endl;
-    if ( c_type == LEX_VAR ) {
         gl ();
         D ();
         while ( c_type == LEX_COMMA ) {
             gl ();
             D ();
         }
-    }
-    else
-        throw curr_lex;
-}
-
-void Parser::OP () {
-    if ( c_type == LEX_PROCEDURE ) {
-        gl ();
-        if ( c_type != LEX_ID )
-            throw curr_lex;
-        st_int.push(c_val);
-        gl ();
-        if ( c_type != LEX_LPAREN )
-            throw curr_lex;
-        gl ();
-        if ( c_type != LEX_RPAREN )
-            throw curr_lex;
-        gl ();
-        if ( c_type != LEX_SEMICOLON )
-            throw curr_lex;
-        gl ();
-        OD();
-        if ( c_type != LEX_SEMICOLON )
-            throw curr_lex;
-        gl ();
-        B();
     }
     else
         throw curr_lex;
@@ -185,21 +144,16 @@ void Parser::B () {
     //cout << "_B_" << endl;
     if ( c_type == LEX_BEGIN ) {
         gl ();
+        S ();
+        while ( c_type == LEX_SEMICOLON ) {
+            gl ();
+            S ();
+        }
         if ( c_type == LEX_END ) {
             gl ();
         }
         else {
-            S ();
-            while ( c_type == LEX_SEMICOLON ) {
-                gl ();
-                S ();
-            }
-            if ( c_type == LEX_END ) {
-                gl ();
-            }
-            else {
-                throw curr_lex;
-            }
+            throw curr_lex;
         }
     }
     else

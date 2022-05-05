@@ -1,7 +1,7 @@
-P → program D1 ; B.
-D1 → eps | OD | OP  // | OF
+P → program D1; B.
+D1 → eps | OD | OP | OF
 OD → var D {, D}
-OP → procedure I ( eps | [var] D {; [var] D} ); OD; B
+OP → procedure I ( eps | [var] D {; [var] D} ); D1; B
 OF → function I ( eps | [var] D {; [var] D} ): [ integer | boolean ]; D1; B
 D → I {, I}: [ integer | boolean | array [N .. N] of [integer | boolean] ]
 B → begin S {; S} end

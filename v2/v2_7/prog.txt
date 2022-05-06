@@ -7,7 +7,6 @@ write(10)
 end;
 
 begin
-max();
-write(20)
-
+write(20);
+max()
 end.

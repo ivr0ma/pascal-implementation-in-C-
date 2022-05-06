@@ -75,13 +75,9 @@ void Parser::analyze () {
         throw curr_lex;
     //for_each( poliz.begin(), poliz.end(), [](Lex l){ cout << l; });
     int i=0;
-    cout << "POLIZ" << endl;
     for ( Lex l : poliz )
-        cout << i++ << "| " << l;
-    cout << "TID" << endl;
-    for (int j=0; j<TID.size(); j++) {
-        cout << j << "| " << TID[j].get_name() << " " << TID[j].get_type() << " " << TID[j].get_value() << endl;
-    }
+        cout << i++ << " " << l;
+    cout << "TID\n" << TID[0].get_name() << " " << TID[0].get_type() << " " << TID[0].get_value() << endl;
     cout << endl << "Yes!!!" << endl;
 }
 
@@ -93,7 +89,7 @@ void Parser::P () {
     else
         throw curr_lex;
 
-    beg_proc = poliz.size(); // = 0
+    beg_proc = poliz.size();
     poliz.push_back ( Lex ( ) );
     poliz.push_back ( Lex ( POLIZ_GO ) );
 
@@ -159,7 +155,7 @@ void Parser::OP () {
         B();
         //st_proc.push(poliz.size());
         //cout<<"size="<<poliz.size()<<endl;
-        //poliz.push_back ( Lex ( ) );
+        poliz.push_back ( Lex ( ) );
         poliz.push_back ( Lex ( POLIZ_GO ) );
     }
     else
@@ -325,9 +321,8 @@ void Parser::S () {
             throw curr_lex;
     }//assign-end
     else if ( c_type == LEX_ID && TID[c_val].get_type() == LEX_PID) {
-        //cout << "procedure..." << endl;
-        //cout << "__TID\n" << TID[c_val].get_name() << " " << TID[c_val].get_type() << " " << TID[c_val].get_value() << endl;
-        poliz.push_back ( Lex(POLIZ_LABEL, poliz.size()+3) );
+        cout << "procedure..." << endl;
+        cout << "__TID\n" << TID[c_val].get_name() << " " << TID[c_val].get_type() << " " << TID[c_val].get_value() << endl;
         poliz.push_back ( Lex(POLIZ_LABEL, TID[c_val].get_value()) );
         poliz.push_back ( Lex ( POLIZ_GO ) );
         gl ();

@@ -1,22 +1,28 @@
 program
 
-procedure max( );
+function max( g: integer): integer;
 var i: integer;
 begin
 write(10)
 end,
 
-procedure min( l: integer);
+procedure min( );
 var j: integer;
 begin
 write(30)
 end,
 
-var k: boolean, p: integer;
+function dec( ): boolean;
+var d: integer;
+begin
+write(40)
+end,
+
+var k: integer, p: integer;
 
 begin
 min();
-max(122, p);
+k:=max();
 write(20)
 
 end.

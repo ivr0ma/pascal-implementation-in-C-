@@ -39,6 +39,7 @@ class Parser {
     void  D1();
     void  OD();
     void  OP();
+    void  OF();
     void  DP();
     void  D();
     void  B();
@@ -123,6 +124,13 @@ void Parser::D1 () {
             D1 ();
         }
     }
+    else if ( c_type == LEX_FUNCTION ) {
+        OF();
+        while ( c_type == LEX_COMMA ) {
+            gl ();
+            D1 ();
+        }
+    }
     else if ( c_type == LEX_SEMICOLON ) ;
     else
         throw curr_lex;
@@ -166,6 +174,58 @@ void Parser::OP () {
         else
             throw curr_lex;
         gl ();
+        if ( c_type != LEX_SEMICOLON )
+            throw curr_lex;
+        gl ();
+        OD();
+        if ( c_type != LEX_SEMICOLON )
+            throw curr_lex;
+        gl ();
+        B();
+        //st_proc.push(poliz.size());
+        //cout<<"size="<<poliz.size()<<endl;
+        //poliz.push_back ( Lex ( ) );
+        poliz.push_back ( Lex ( POLIZ_GO ) );
+    }
+    else
+        throw curr_lex;
+}
+
+void Parser::OF () {
+    if ( c_type == LEX_FUNCTION ) {
+        gl ();
+        if ( c_type != LEX_ID )
+            throw curr_lex;
+        st_int.push(c_val);
+        dec ( LEX_FID );
+        gl ();
+        if ( c_type != LEX_LPAREN )
+            throw curr_lex;
+        gl ();
+        if ( c_type == LEX_RPAREN ) ;
+        else if ( c_type == LEX_ID ) {
+            DP();
+            while ( c_type == LEX_COMMA ) {
+                gl ();
+                DP ();
+            }
+            if ( c_type != LEX_RPAREN )
+                throw curr_lex;
+        }
+        else
+            throw curr_lex;
+        gl ();
+        if ( c_type != LEX_COLON )
+            throw curr_lex;
+        gl ();
+        if ( c_type == LEX_INT ) {
+            gl ();
+        }
+        else if ( c_type == LEX_BOOL ) {
+            gl ();
+        }
+        else
+            throw curr_lex;
         if ( c_type != LEX_SEMICOLON )
             throw curr_lex;
         gl ();
@@ -455,11 +515,52 @@ void Parser::T () {
 }
 
 void Parser::F () {
+    int proc_val;
     //cout << "_F_" << endl;
-    if ( c_type == LEX_ID ) {
+    if ( c_type == LEX_ID && TID[c_val].get_type() != LEX_FID) {
         check_id ();
         poliz.push_back ( Lex ( LEX_ID, c_val ) );
         gl ();
+    }
+    else if ( c_type == LEX_ID && TID[c_val].get_type() == LEX_FID) {
+        //cout << "procedure..." << endl;
+        //cout << "__TID\n" << TID[c_val].get_name() << " " << TID[c_val].get_type() << " " << TID[c_val].get_value() << endl;
+        st_lex.push ( LEX_INT );
+        poliz.push_back ( Lex(POLIZ_LABEL, poliz.size()+3) );
+        //poliz.push_back ()
+        proc_val = c_val;
+        gl ();
+        if ( c_type == LEX_LPAREN ) {
+            gl ();
+            if ( c_type == LEX_RPAREN ) ;
+            else if ( c_type == LEX_ID || c_type == LEX_NUM) {
+                //DP();
+                if (c_type == LEX_ID)
+                    poliz.push_back ( Lex ( LEX_ID, c_val ) );
+                else
+                    poliz.push_back ( Lex ( LEX_NUM, c_val ) );
+                gl ();
+                while ( c_type == LEX_COMMA ) {
+                    gl ();
+                    if (c_type == LEX_ID)
+                        poliz.push_back ( Lex ( LEX_ID, c_val ) );
+                    else
+                        poliz.push_back ( Lex ( LEX_NUM, c_val ) );
+                    gl ();
+                    //DP ();
+                }
+                if ( c_type != LEX_RPAREN )
+                    throw curr_lex;
+            }
+            else
+                throw curr_lex;
+            gl ();
+        }
+        else
+            throw curr_lex;
+
+        poliz.push_back ( Lex(POLIZ_LABEL, TID[proc_val].get_value()) );
+        poliz.push_back ( Lex ( POLIZ_GO ) );
     }
     else if ( c_type == LEX_NUM ) {
         st_lex.push ( LEX_INT );
@@ -506,7 +607,7 @@ void Parser::dec ( type_of_lex type ) {
         else {
             TID[i].put_declare ();
             TID[i].put_type ( type );
-            if (type == LEX_PID) {
+            if (type == LEX_PID || type == LEX_FID ) {
                 TID[i].put_value(poliz.size());
                 TID[i].put_assign();
                 curr_proc_name = TID[i].get_name();

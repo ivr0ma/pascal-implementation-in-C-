@@ -1,11 +1,11 @@
 P → program D1 ; B.
 D1 → eps | OD {, D1} | OP {, D1}  // | OF
 OD → var D {, D}
-OP → procedure I ( eps | DP {, DP} ); OD; B
-OF → function I ( eps | DP {, DP} ): [ integer | boolean ]; OD; B
+OP → procedure I ( eps | D {, D} ); OD; B
+OF → function I ( eps | D {, D} ): [ integer | boolean ]; D1; B
 D → I {, I}: [ integer | boolean | array [N .. N] of [integer | boolean] ]
 B → begin S {; S} end
-S → I ( [eps | I {, I} ] ) |
+S → I ( [eps | I {, I}] ) |
     I := [ E | if E then S else S | while E do S | B | read (I) | write (E) ]
 E → E1 [ = | < | > | <= | >= | != ] E1 | E1
 E1 → T { [ + | - | or ] T }

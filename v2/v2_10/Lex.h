@@ -20,7 +20,7 @@ enum type_of_lex {
     LEX_SEMICOLON, LEX_COMMA, LEX_COLON, LEX_ASSIGN, LEX_LPAREN, LEX_RPAREN, LEX_EQ, LEX_LSS,   /*28*/
     LEX_GTR, LEX_PLUS, LEX_MINUS, LEX_TIMES, LEX_SLASH, LEX_LEQ, LEX_NEQ, LEX_GEQ,              /*36*/
     LEX_NUM,                                                                                    /*37*/
-    LEX_ID, LEX_PID, LEX_PBOOL, LEX_PINT,                                                       /*39*/
+    LEX_ID, LEX_PID,                                                                            /*39*/
     POLIZ_LABEL,                                                                                /*40*/
     POLIZ_ADDRESS,                                                                              /*41*/
     POLIZ_GO,                                                                                   /*42*/

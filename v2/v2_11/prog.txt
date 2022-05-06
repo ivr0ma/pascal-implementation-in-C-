@@ -6,7 +6,7 @@ begin
 write(10)
 end,
 
-procedure min( l: integer);
+procedure min( f: integer, g: integer);
 var j: integer;
 begin
 write(30)
@@ -16,7 +16,7 @@ var k: boolean, p: integer;
 
 begin
 min();
-max(122, p);
+max();
 write(20)
 
 end.

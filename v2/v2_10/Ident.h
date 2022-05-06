@@ -22,7 +22,6 @@ using namespace std;
  */
 class Ident {
     string      name;  // название переменной
-    string      proc_name;  // название переменной
     bool        declare;  // было ли описано это имя
     type_of_lex type;  //
     bool        assign;  // флаг для интерполяции
@@ -37,15 +36,11 @@ public:
     }
     Ident ( const string n ) {
         name    = n;
-        proc_name = "";
         declare = false;
         assign  = false;
     }
     string get_name () const {
         return name;
-    }
-    string get_proc_name () const {
-        return proc_name;
     }
     bool get_declare () const {
         return declare;
@@ -58,9 +53,6 @@ public:
     }
     void put_type ( type_of_lex t ) {
         type      = t;
-    }
-    void put_proc_name ( string name ) {
-        proc_name  = name;
     }
     bool get_assign () const {
         return assign;

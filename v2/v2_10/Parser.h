@@ -31,7 +31,7 @@ class Parser {
     Lex          curr_lex;  //текущая лексема
     type_of_lex  c_type;
     int          c_val;
-    string       curr_proc_name;
+    int          beg_proc;
     Scanner      scan;
     stack < int >           st_int;
     stack < type_of_lex >   st_lex;
@@ -39,7 +39,6 @@ class Parser {
     void  D1();
     void  OD();
     void  OP();
-    void  DP();
     void  D();
     void  B();
     void  S();
@@ -48,7 +47,6 @@ class Parser {
     void  T();
     void  F();
     void  dec ( type_of_lex type);
-    void  proc_dec ( type_of_lex type);
     void  check_id ();
     void  check_op ();
     void  check_not ();
@@ -82,13 +80,12 @@ void Parser::analyze () {
         cout << i++ << "| " << l;
     cout << "TID" << endl;
     for (int j=0; j<TID.size(); j++) {
-        cout << j << "| " << TID[j].get_name() << " " << TID[j].get_type() << " " << TID[j].get_value() << " " << TID[j].get_proc_name() << endl;
+        cout << j << "| " << TID[j].get_name() << " " << TID[j].get_type() << " " << TID[j].get_value() << endl;
     }
     cout << endl << "Yes!!!" << endl;
 }
 
 void Parser::P () {
-    int beg_proc;
     //cout << "_P_" << endl;
     if ( c_type == LEX_PROGRAM ) {
         gl ();
@@ -155,10 +152,10 @@ void Parser::OP () {
         gl ();
         if ( c_type == LEX_RPAREN ) ;
         else if ( c_type == LEX_ID ) {
-            DP();
+            D();
             while ( c_type == LEX_COMMA ) {
                 gl ();
-                DP ();
+                D ();
             }
             if ( c_type != LEX_RPAREN )
                 throw curr_lex;
@@ -181,41 +178,6 @@ void Parser::OP () {
     }
     else
         throw curr_lex;
-}
-
-void Parser::DP () {
-    //cout << "_D_" << endl;
-    if ( c_type != LEX_ID )
-        throw curr_lex;
-    else {
-        st_int.push ( c_val );
-        gl ();
-        while ( c_type == LEX_COMMA ) {
-            gl ();
-            if ( c_type != LEX_ID )
-                throw curr_lex;
-            else {
-                st_int.push ( c_val );
-                gl ();
-            }
-        }
-        if ( c_type != LEX_COLON )
-            throw curr_lex;
-        else {
-            gl ();
-            if ( c_type == LEX_INT ) {
-                proc_dec ( LEX_INT );
-                gl ();
-            }
-            else
-            if ( c_type == LEX_BOOL ) {
-                proc_dec ( LEX_BOOL );
-                gl ();
-            }
-            else
-                throw curr_lex;
-        }
-    }
 }
 
 void Parser::D () {
@@ -281,7 +243,6 @@ void Parser::B () {
 void Parser::S () {
     //cout << "_S_" << endl;
     int pl0, pl1, pl2, pl3;
-    int proc_val;
 
     if ( c_type == LEX_IF ) {
         gl ();
@@ -381,40 +342,20 @@ void Parser::S () {
         //cout << "procedure..." << endl;
         //cout << "__TID\n" << TID[c_val].get_name() << " " << TID[c_val].get_type() << " " << TID[c_val].get_value() << endl;
         poliz.push_back ( Lex(POLIZ_LABEL, poliz.size()+3) );
-        //poliz.push_back ()
-        proc_val = c_val;
+
+        poliz.push_back ( Lex(POLIZ_LABEL, TID[c_val].get_value()) );
+        poliz.push_back ( Lex ( POLIZ_GO ) );
         gl ();
         if ( c_type == LEX_LPAREN ) {
             gl ();
-            if ( c_type == LEX_RPAREN ) ;
-            else if ( c_type == LEX_ID || c_type == LEX_NUM) {
-                //DP();
-                if (c_type == LEX_ID)
-                    poliz.push_back ( Lex ( LEX_ID, c_val ) );
-                else
-                    poliz.push_back ( Lex ( LEX_NUM, c_val ) );
+            if ( c_type == LEX_RPAREN ) {
                 gl ();
-                while ( c_type == LEX_COMMA ) {
-                    gl ();
-                    if (c_type == LEX_ID)
-                        poliz.push_back ( Lex ( LEX_ID, c_val ) );
-                    else
-                        poliz.push_back ( Lex ( LEX_NUM, c_val ) );
-                    gl ();
-                    //DP ();
-                }
-                if ( c_type != LEX_RPAREN )
-                    throw curr_lex;
             }
             else
                 throw curr_lex;
-            gl ();
         }
         else
             throw curr_lex;
-
-        poliz.push_back ( Lex(POLIZ_LABEL, TID[proc_val].get_value()) );
-        poliz.push_back ( Lex ( POLIZ_GO ) );
     }
     else
         B();
@@ -509,22 +450,7 @@ void Parser::dec ( type_of_lex type ) {
             if (type == LEX_PID) {
                 TID[i].put_value(poliz.size());
                 TID[i].put_assign();
-                curr_proc_name = TID[i].get_name();
             }
-        }
-    }
-}
-
-void Parser::proc_dec ( type_of_lex type ) {
-    int i;
-    while ( !st_int.empty () ) {
-        from_st ( st_int, i );
-        if ( TID[i].get_declare () && (TID[i].get_proc_name() == curr_proc_name) )
-            throw "twice";
-        else {
-            TID[i].put_declare ();
-            TID[i].put_type ( type );
-            TID[i].put_proc_name( curr_proc_name );
         }
     }
 }

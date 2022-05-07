@@ -3,7 +3,7 @@ D1 → eps | OD {, D1} | OP {, D1}  // | OF
 OD → var D {, D}
 OP → procedure I ( eps | DP {, DP} ); OD; B
 OF → function I ( eps | DP {, DP} ): [ integer | boolean ]; OD; B
-D → I {, I}: [ integer | boolean | array [N] of [integer | boolean] ]
+D → I {, I}: [ integer | boolean | array [N .. N] of [integer | boolean] ]
 B → begin S {; S} end
 S → I ( [eps | I {, I} ] ) |
     I := [ E | if E then S else S | while E do S | B | read (I) | write (E) ]

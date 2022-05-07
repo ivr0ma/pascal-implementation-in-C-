@@ -10,11 +10,11 @@ using namespace std;
 //Таблица служебных слов
 const char *
         Scanner::TW    [] = { "", "and", "begin", "boolean", "do", "else", "end", "if", "false", "integer", "not", "or", "program",
-                              "read", "then", "true", "var", "while", "write", "procedure", "function", "array", "of", NULL };
+                              "read", "then", "true", "var", "while", "write", "procedure", "function", NULL };
 
 //Таблица разделителей
 const char *
-        Scanner::TD    [] = {".", ";", ",", ":", ":=", "(", ")", "=", "<", ">", "+", "-", "*", "/", "<=", "!=", ">=", "[", "]", NULL };
+        Scanner::TD    [] = {".", ";", ",", ":", ":=", "(", ")", "=", "<", ">", "+", "-", "*", "/", "<=", "!=", ">=", NULL };
 
 /*==========================================================================
  *----------------------------------Main------------------------------------

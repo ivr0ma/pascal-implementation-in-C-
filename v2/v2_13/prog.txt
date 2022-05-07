@@ -18,7 +18,7 @@ begin
 write(40)
 end,
 
-var k: integer, mas1, mas2: array [5] of integer;
+var k: integer, p: integer;
 
 begin
 min();

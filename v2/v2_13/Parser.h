@@ -279,14 +279,11 @@ void Parser::DP () {
 }
 
 void Parser::D () {
-    vector <string> name_id;
-    string array_name;
     //cout << "_D_" << endl;
     if ( c_type != LEX_ID )
         throw curr_lex;
     else {
         st_int.push ( c_val );
-        name_id.push_back(TID[c_val].get_name());
         gl ();
         while ( c_type == LEX_COMMA ) {
             gl ();
@@ -294,7 +291,6 @@ void Parser::D () {
                 throw curr_lex;
             else {
                 st_int.push ( c_val );
-                name_id.push_back(TID[c_val].get_name());
                 gl ();
             }
         }
@@ -306,42 +302,10 @@ void Parser::D () {
                 dec ( LEX_INT );
                 gl ();
             }
-            else if ( c_type == LEX_BOOL ) {
+            else
+            if ( c_type == LEX_BOOL ) {
                 dec ( LEX_BOOL );
                 gl ();
-            }
-            else if ( c_type == LEX_ARRAY ) {
-                gl ();
-                if ( c_type != LEX_LMAS )
-                    throw curr_lex;
-                gl ();
-                if ( c_type != LEX_NUM )
-                    throw curr_lex;
-
-                for (int j=0; j<name_id.size(); j++) {
-                    for (int i = 0; i < c_val; i++) {
-                        TID.push_back(Ident(name_id[j]));
-                    }
-                }
-
-                gl ();
-                if ( c_type != LEX_RMAS )
-                    throw curr_lex;
-                gl ();
-                if ( c_type != LEX_OF )
-                    throw curr_lex;
-                gl ();
-                if ( c_type == LEX_INT ) {
-                    cout << "INT ARRAY!!!" << endl;
-                    dec ( LEX_ARR );
-                    gl ();
-                }
-                else if ( c_type == LEX_BOOL ) {
-                    cout << "BOOL ARRAY!!!" << endl;
-                    dec ( LEX_ARR );
-                    gl ();
-                }
-                else curr_lex;
             }
             else
                 throw curr_lex;
@@ -554,19 +518,9 @@ void Parser::F () {
     int proc_val;
     //cout << "_F_" << endl;
     if ( c_type == LEX_ID && TID[c_val].get_type() != LEX_FID) {
-        //check_id ();
+        check_id ();
         poliz.push_back ( Lex ( LEX_ID, c_val ) );
         gl ();
-        if (c_type == LEX_LMAS) {
-            cout << "MAS!!" << endl;
-            gl();
-            if ( c_type != LEX_NUM )
-                throw curr_lex;
-            gl ();
-            if ( c_type != LEX_RMAS )
-                throw curr_lex;
-            gl();
-        }
     }
     else if ( c_type == LEX_ID && TID[c_val].get_type() == LEX_FID) {
         //cout << "procedure..." << endl;

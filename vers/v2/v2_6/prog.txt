@@ -1,0 +1,12 @@
+program
+
+procedure max( );
+var i: integer;
+begin
+write(10)
+end;
+
+begin
+write(20);
+max()
+end.

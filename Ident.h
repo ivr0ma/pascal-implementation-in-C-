@@ -22,7 +22,7 @@ using namespace std;
  */
 class Ident {
     string      name;  // название переменной
-    string      proc_name;  // название переменной
+    string      proc_name;  // название процедуры
     bool        declare;  // было ли описано это имя
     type_of_lex type;  //
     bool        assign;  // флаг для интерполяции

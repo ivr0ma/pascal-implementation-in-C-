@@ -22,7 +22,7 @@ var k: integer, mas1, mas2: array [5] of integer;
 
 begin
 min();
-k:=max();
-write(20)
+k:=9;
+write(k+20)
 
 end.

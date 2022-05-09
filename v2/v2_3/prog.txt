@@ -1,5 +1,0 @@
-program var i: int, j: int;
-begin
-i:=100;
-write(i+10)
-end.
